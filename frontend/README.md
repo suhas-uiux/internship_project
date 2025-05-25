@@ -210,20 +210,6 @@ Built by a **2nd year B.Tech student** for learning and portfolio purposes.
 - UI improvements
 
 ---
-# Task Manager
-
-Welcome to the **Task Manager** app!
-
-## 🔐 Authentication Screens
-
-### Home Page
-![Home Page](./frontend/src/assets/Screenshot%202025-05-25%202018...png)
-
-### Login Page
-![Login Page](./frontend/src/assets/Screenshot%202025-05-25%202019...png)
-
-### Register Page
-![Register Page](./frontend/src/assets/Screenshot%202025-05-25%202019...png)
 
 
 
