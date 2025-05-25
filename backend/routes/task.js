@@ -5,8 +5,6 @@ const checkRole = require('../middleware/checkRole');
 const User = require('../models/User');
 
 const router = express.Router();
-
-// CREATE task (Manager/Admin only)
 // CREATE task (Manager/Admin only)
 router.post('/', authMiddleware, checkRole(['admin', 'manager']), async (req, res) => {
     try {
@@ -85,7 +83,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
   }
 });
 
-// DELETE task (Admin only)
+
 // DELETE task (Admin only, and only within their organization)
 router.delete('/:id', authMiddleware, checkRole(['admin']), async (req, res) => {
     try {
