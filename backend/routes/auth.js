@@ -12,9 +12,7 @@ const checkRole = require('../middleware/checkRole');
 const router = express.Router();
 
 
-// ==========================
-// AUTH ROUTES
-// ==========================
+
 
 // @route   POST /api/auth/register
 router.post('/register', async (req, res) => {
@@ -131,9 +129,7 @@ router.post('/login', async (req, res) => {
 });
 
 
-// ==========================
-// PROTECTED ROUTES
-// ==========================
+
 
 // @route   GET /api/auth/profile
 router.get('/profile', authenticate, (req, res) => {
