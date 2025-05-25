@@ -1,12 +1,212 @@
-# React + Vite
+# 🧩 Multi-Tenant Task Manager (MERN Stack)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A **multi-tenant task management** application built using the **MERN stack** (MongoDB, Express, React, Node.js). It includes **role-based access**, **organization-based data isolation**, and a clean frontend built with **Tailwind CSS**.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Register/Login** with JWT-based authentication
+- **Multi-tenant architecture**: users belong to organizations
+- **Role-based access control**:
+  - **Admin**: Full control (manage tasks, promote members to managers)
+  - **Manager**: View all member tasks, create/update tasks
+  - **Member**: View/update only their own assigned tasks
+- **Task CRUD operations**
+- **Dashboard** for each role
+- **Clean UI** with Tailwind CSS
+- **Protected routes** using auth middleware
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🗂️ Folder Structure
+
+```
+mern-multi-tenant-task-manager/
+├── backend/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   ├── server.js
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── components/
+│   │   ├── App.jsx
+│   ├── index.html
+├── .env
+```
+
+---
+
+## 📦 Backend Setup
+
+### 📁 Installed Backend Dependencies
+
+```bash
+npm install express mongoose bcryptjs jsonwebtoken cors dotenv
+npm install nodemon --save-dev
+```
+
+### ▶️ Run Backend Server
+
+```bash
+cd backend
+npm run dev
+```
+
+Ensure your `.env` includes:
+
+```env
+PORT=5000
+MONGO_URI=mongodb+srv://<your_connection_string>
+JWT_SECRET=your_jwt_secret
+```
+
+---
+
+## 💻 Frontend Setup
+
+### 📁 Installed Frontend Dependencies
+
+```bash
+npm install axios react-router-dom
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+### Tailwind Setup in `tailwind.config.js`
+
+```js
+content: [
+  "./index.html",
+  "./src/**/*.{js,ts,jsx,tsx}",
+],
+theme: {
+  extend: {},
+},
+plugins: [],
+```
+
+### Include Tailwind in `src/index.css`
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+### ▶️ Run Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+---
+
+## 🌐 Application Routes
+
+### 🧠 Auth
+
+| Method | Endpoint        | Description           |
+|--------|------------------|-----------------------|
+| POST   | `/api/auth/register` | Register user + org |
+| POST   | `/api/auth/login`    | Login + get JWT     |
+
+### ✅ Tasks
+
+| Method | Endpoint            | Role Access     |
+|--------|----------------------|-----------------|
+| GET    | `/api/tasks`         | Admin/Manager/Member |
+| POST   | `/api/tasks`         | Admin/Manager   |
+| PUT    | `/api/tasks/:id`     | Admin/Manager/Member (if own task) |
+| DELETE | `/api/tasks/:id`     | Admin only      |
+
+---
+
+## 🔐 Middleware
+
+- **authenticate.js** – Verifies JWT and attaches user to request
+- **authorizeRoles.js** – Restricts access by role (Admin, Manager, Member)
+
+---
+
+## 📆 Progress Overview
+
+
+
+- Scaffolded project with `Vite` for React + Node/Express backend
+- Set up MongoDB Atlas and connected to backend
+- Built **Register** and **Login** routes
+- Generated JWT and tested login with Postman
+
+
+
+- Added **authentication middleware** to protect routes
+- Added **role-based access control**
+- Implemented **task CRUD routes** (Admin/Manager can create, Members can update own)
+- Created frontend pages:
+  - Login
+  - Register
+  - Dashboard (renders based on user role)
+- Set up Axios and React Router DOM
+- Designed UI using Tailwind CSS
+
+---
+
+## 🔧 Scripts
+
+### Backend (`backend/package.json`)
+```json
+"scripts": {
+  "dev": "nodemon server.js"
+}
+```
+
+### Frontend (`frontend/package.json`)
+```json
+"scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview"
+}
+```
+
+---
+
+## 🧪 Testing
+
+Use Postman to test:
+
+- Register: `POST /api/auth/register`
+- Login: `POST /api/auth/login`
+- Attach the returned token as `Authorization: Bearer <token>` in headers for protected routes.
+
+---
+
+## 📌 Environment Variables Example
+
+Create a `.env` file in `backend/`:
+
+```env
+PORT=5000
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.4e2b0.mongodb.net/<dbname>?retryWrites=true&w=majority
+JWT_SECRET=your_jwt_secret
+```
+
+---
+
+## 👨‍💻 Author
+
+Built by a **2nd year B.Tech student** for learning and portfolio purposes.
+
+---
+
+## 📣 Future Enhancements
+
+- Email invite system for organization join
+- Task deadlines and statuses
+- Comments/Notes per task
+- Pagination and search
+- UI improvements
+
+---
