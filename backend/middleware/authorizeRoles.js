@@ -1,7 +1,7 @@
 module.exports = function authorizeRoles(allowedRoles = []) {
     return (req, res, next) => {
       try {
-        const user = req.user; // You must have authentication middleware setting req.user
+        const user = req.user; 
         if (!user) {
           return res.status(401).json({ message: 'Unauthorized: No user info found' });
         }
