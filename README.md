@@ -108,11 +108,7 @@ npm install tailwindcss@3.4.17
 npm install vite@6.3.5
 ```
 
-Or install them all together:
 
-```bash
-npm install @eslint/js@9.27.0 @tailwindcss/typography@0.5.16 @types/react-dom@19.1.5 @types/react@19.1.5 @vitejs/plugin-react@4.5.0 autoprefixer@10.4.21 axios@1.9.0 eslint-plugin-react-hooks@5.2.0 eslint-plugin-react-refresh@0.4.20 eslint@9.27.0 globals@16.1.0 highlight.js@11.11.1 postcss@8.5.3 react-dom@19.1.0 react-markdown@10.1.0 react-router-dom@7.6.0 react@19.1.0 rehype-highlight@7.0.2 tailwindcss@3.4.17 vite@6.3.5
-```
 
 ---
 
