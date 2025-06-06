@@ -1,5 +1,3 @@
-// middleware/authenticate.js
-
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
@@ -22,9 +20,12 @@ module.exports = async function authenticate(req, res, next) {
 
     req.user = {
       userId: user._id,
-      role: user.role,
-      orgId: user.organization,
-      name: user.name
+      username: user.username,
+      fullName: user.fullName,
+      degree: user.degree,
+      branch: user.branch,
+      semesterCompleted: user.semesterCompleted,
+      resume: user.resume || null,
     };
 
     next();

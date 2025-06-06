@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
+  username: {           // changed from email to username
     type: String,
     required: true,
     unique: true,
@@ -14,14 +10,26 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  role: {
+  fullName: {           // renamed from name to fullName for clarity
     type: String,
-    enum: ['admin', 'manager', 'member'],
-    default: 'member',
+    required: true,
   },
-  organization: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Organization',
+  degree: {
+    type: String,
+    required: true,
+  },
+  branch: {
+    type: String,
+    required: true,
+  },
+  semesterCompleted: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 8,            // assuming max 8 semesters in engineering
+  },
+  resume: {
+    type: String,      // store resume file URL or path, optional
   },
 }, { timestamps: true });
 

@@ -3,23 +3,26 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
-  const [orgName, setOrgName] = useState('');
-  const [isCreatingOrg, setIsCreatingOrg] = useState(true);
+  const [degree, setDegree] = useState('');
+  const [branch, setBranch] = useState('');
+  const [semesterCompleted, setSemesterCompleted] = useState(6); // Default to 6th sem
+
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', {
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
+      await axios.post('http://localhost:5000/api/auth/register', {
+        username: username.trim(),
+        fullName: fullName.trim(),
         password,
-        orgName: orgName.trim(),
-        isCreatingOrg,
+        degree,
+        branch,
+        semesterCompleted,
       });
 
       alert('Registered successfully. Please login.');
@@ -32,23 +35,23 @@ const Register = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form onSubmit={handleRegister} className="bg-white p-6 rounded shadow-md w-96 space-y-4">
-        <h2 className="text-2xl font-bold text-center">Register</h2>
+        <h2 className="text-2xl font-bold text-center">Student Registration</h2>
 
         <input
           type="text"
-          placeholder="Name"
+          placeholder="Username"
           className="w-full p-2 border rounded"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
 
         <input
-          type="email"
-          placeholder="Email"
+          type="text"
+          placeholder="Full Name"
           className="w-full p-2 border rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
           required
         />
 
@@ -63,21 +66,32 @@ const Register = () => {
 
         <input
           type="text"
-          placeholder={isCreatingOrg ? 'New Organization Name' : 'Existing Organization Name'}
+          placeholder="Degree (e.g., BE, B.Tech)"
           className="w-full p-2 border rounded"
-          value={orgName}
-          onChange={(e) => setOrgName(e.target.value)}
+          value={degree}
+          onChange={(e) => setDegree(e.target.value)}
           required
         />
 
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            checked={isCreatingOrg}
-            onChange={() => setIsCreatingOrg(!isCreatingOrg)}
-          />
-          <label className="text-sm">Create new organization?</label>
-        </div>
+        <input
+          type="text"
+          placeholder="Branch (e.g., CSE, ECE)"
+          className="w-full p-2 border rounded"
+          value={branch}
+          onChange={(e) => setBranch(e.target.value)}
+          required
+        />
+
+        <input
+          type="number"
+          placeholder="Semester Completed"
+          className="w-full p-2 border rounded"
+          value={semesterCompleted}
+          onChange={(e) => setSemesterCompleted(Number(e.target.value))}
+          required
+          min={1}
+          max={8}
+        />
 
         <button
           type="submit"
