@@ -1,5 +1,5 @@
 
-# 🧑‍💻 Internship Project Setup Guide (MERN Stack)
+# 🧑‍💻 Interview_Prep Setup Guide (MERN Stack)
 
 ## 📁 Project Structure
 
