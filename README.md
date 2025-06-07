@@ -92,7 +92,6 @@ npm install @types/react-dom@19.1.5
 npm install @types/react@19.1.5
 npm install @vitejs/plugin-react@4.5.0
 npm install autoprefixer@10.4.21
-npm install axios@1.9.0
 npm install eslint-plugin-react-hooks@5.2.0
 npm install eslint-plugin-react-refresh@0.4.20
 npm install eslint@9.27.0
@@ -100,7 +99,6 @@ npm install globals@16.1.0
 npm install highlight.js@11.11.1
 npm install postcss@8.5.3
 npm install react-dom@19.1.0
-npm install react-markdown@10.1.0
 npm install react-router-dom@7.6.0
 npm install react@19.1.0
 npm install rehype-highlight@7.0.2
