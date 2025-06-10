@@ -5,18 +5,7 @@ const Question = require('../models/Question');
 dotenv.config();
 
 const sampleQuestions = [
-  {
-    topic: "Python",
-    questionText: "Which planet is known as the Red Planet?",
-    options: ["Earth", "Venus", "Mars", "Jupiter"],
-    correctAnswerIndex: 2
-  },
-  {
-    topic: "Python",
-    questionText: "What is the capital of Karnataka?",
-    options: ["Mumbai", "Chennai", "Bangalore", "Hyderabad"],
-    correctAnswerIndex: 2
-  },
+  
   // Java topic questions
   {
     topic: "Java",

@@ -8,11 +8,20 @@ import axios from 'axios';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
 const API_KEY = 'AIzaSyBfsdrS22wfY_G8lHVBVFnU8ZQyHw00pec'; // Replace with env var in prod
 
-const getCompletedTopics = () => JSON.parse(sessionStorage.getItem('completedTopics') || '[]');
+const getCurrentUsername = () => localStorage.getItem('username') || null;
+
+const getCompletedTopics = () => {
+  const username = getCurrentUsername();
+  if (!username) return [];
+  return JSON.parse(localStorage.getItem(`completedTopics_${username}`) || '[]');
+};
+
 const saveCompletedTopic = (name) => {
+  const username = getCurrentUsername();
+  if (!username) return;
   const completed = getCompletedTopics();
   if (!completed.includes(name)) {
-    sessionStorage.setItem('completedTopics', JSON.stringify([...completed, name]));
+    localStorage.setItem(`completedTopics_${username}`, JSON.stringify([...completed, name]));
   }
 };
 
@@ -122,7 +131,6 @@ Content:
         <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{markdownContent}</ReactMarkdown>
       </article>
 
-      {/* Generate Quiz Button */}
       {quiz.length === 0 && !loading && (
         <button
           onClick={generateQuiz}
@@ -132,18 +140,13 @@ Content:
         </button>
       )}
 
-      {/* Loading Indicator */}
       {loading && <p className="text-center text-gray-300 mt-4">Generating quiz...</p>}
 
-      {/* Quiz Section */}
       {quiz.length > 0 && (
         <section className="space-y-8">
           <h2 className="text-3xl font-semibold text-yellow-400 mb-6">Quiz</h2>
           {quiz.map((q, idx) => (
-            <div
-              key={idx}
-              className="bg-slate-700 rounded-lg p-5 shadow-sm"
-            >
+            <div key={idx} className="bg-slate-700 rounded-lg p-5 shadow-sm">
               <p className="font-semibold mb-3 text-lg">
                 {idx + 1}. {q.question}
               </p>
@@ -191,7 +194,6 @@ Content:
             </div>
           ))}
 
-          {/* Buttons for submit or retry */}
           <div className="mt-6 flex gap-4">
             {!submitted ? (
               <button

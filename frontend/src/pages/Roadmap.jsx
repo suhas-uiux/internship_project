@@ -14,10 +14,8 @@ const topics = [
   { name: 'Backtracking', path: '/backtracking', children: [] }
 ];
 
-// Get logged-in username from localStorage
 const getCurrentUsername = () => localStorage.getItem('username') || null;
 
-// Get completed topics for current user
 const getCompletedTopics = () => {
   const username = getCurrentUsername();
   if (!username) return [];
@@ -29,7 +27,6 @@ const Roadmap = () => {
   const nodeRefs = useRef({});
   const [lines, setLines] = useState([]);
 
-  // Group topics by level for layout
   const groupTopicsByLevel = () => {
     const levels = [];
     const visited = new Set();
@@ -50,7 +47,6 @@ const Roadmap = () => {
     return levels;
   };
 
-  // Draw arrows between topics
   useEffect(() => {
     const updateLines = () => {
       const newLines = [];
@@ -86,12 +82,12 @@ const Roadmap = () => {
 
   const completedTopics = getCompletedTopics();
 
-  // Check if a topic is unlocked for the current user
   const isUnlocked = (topic) => {
     if (topic.name === 'Arrays&Hashing') return true;
     return topics.some(
       (parent) =>
-        parent.children.includes(topic.name) && completedTopics.includes(parent.name)
+        parent.children.includes(topic.name) &&
+        completedTopics.includes(parent.name)
     );
   };
 
