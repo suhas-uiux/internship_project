@@ -38,7 +38,6 @@ const Home = () => {
     if (cardName === "ROADMAP") navigate("/roadmap");
     if (cardName === "PROFILE") navigate("/profile");
     if (cardName === "QUIZES") navigate("/quiz/setup");
-
   };
 
   const getCardStyle = (index) => {
@@ -68,11 +67,29 @@ const Home = () => {
 
       <div className="absolute top-8 right-10 space-x-4">
         {isLoggedIn ? (
-          <LogoutButton onLogout={handleLogout} />
+          <>
+            <LogoutButton onLogout={handleLogout} />
+            <button
+              onClick={() => navigate('/chat')}
+              className="px-4 py-2 border border-white rounded hover:bg-white hover:text-[#1a1a2e] transition"
+            >
+              Chat
+            </button>
+          </>
         ) : (
           <>
-            <Link to="/login" className="px-4 py-2 border border-white rounded hover:bg-white hover:text-[#1a1a2e] transition">Login</Link>
-            <Link to="/register" className="px-4 py-2 border border-white rounded hover:bg-white hover:text-[#1a1a2e] transition">Register</Link>
+            <Link
+              to="/login"
+              className="px-4 py-2 border border-white rounded hover:bg-white hover:text-[#1a1a2e] transition"
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="px-4 py-2 border border-white rounded hover:bg-white hover:text-[#1a1a2e] transition"
+            >
+              Register
+            </Link>
           </>
         )}
       </div>

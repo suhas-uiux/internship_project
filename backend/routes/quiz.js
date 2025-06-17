@@ -3,21 +3,31 @@ const router = express.Router();
 const Question = require('../models/Question');
 
 // @route GET /quiz/:count
-// @desc Get random questions
+// @desc Get random questions (optionally filtered by topic)
 router.get('/:count', async (req, res) => {
   const count = parseInt(req.params.count);
+  const topic = req.query.topic; // e.g., ?topic=Java
 
   if (!count || isNaN(count) || count <= 0) {
     return res.status(400).json({ error: 'Invalid count parameter' });
   }
 
   try {
-    const questions = await Question.aggregate([{ $sample: { size: count } }]);
+    const filter = topic
+      ? { topic: { $regex: new RegExp(`^${topic}$`, 'i') } }
+      : {};
+
+    const questions = await Question.aggregate([
+      { $match: filter },
+      { $sample: { size: count } }
+    ]);
+
     const formatted = questions.map(q => ({
       _id: q._id,
       questionText: q.questionText,
       options: q.options
     }));
+
     res.json(formatted);
   } catch (err) {
     console.error('Error fetching questions:', err);

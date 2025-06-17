@@ -7,7 +7,6 @@ const saveQuizProgress = (topic, score) => {
   const username = localStorage.getItem("username");
   if (!username || !topic) return;
 
-  // Get roadmap topics list — update this list as per your real roadmap topics
   const roadmapTopics = [
     "Arrays&Hashing",
     "Two Pointers",
@@ -23,7 +22,6 @@ const saveQuizProgress = (topic, score) => {
   ];
 
   const isRoadmap = roadmapTopics.includes(topic);
-
   const storageKey = isRoadmap
     ? `completedTopics_${username}`
     : `completedSideQuests_${username}`;
@@ -51,9 +49,7 @@ const Quiz = () => {
 
     fetch(fetchURL)
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch questions");
-        }
+        if (!res.ok) throw new Error("Failed to fetch questions");
         return res.json();
       })
       .then((data) => {
@@ -90,7 +86,7 @@ const Quiz = () => {
           return res.json();
         })
         .then((result) => {
-          saveQuizProgress(topic, result.score); // ← Save to roadmap or side quest
+          saveQuizProgress(topic, result.score);
           navigate("/quiz/setup", {
             state: {
               quizResult: {
@@ -119,7 +115,15 @@ const Quiz = () => {
   const currentQuestion = questions[current];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white px-4 relative">
+      {/* Go back to home button */}
+      <button
+        onClick={() => navigate('/')}
+        className="absolute top-4 left-4 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+      >
+        ← Home
+      </button>
+
       <div className="max-w-2xl w-full bg-[#1a1a2e] p-8 rounded-xl shadow-xl">
         <h2 className="text-2xl font-bold mb-6">
           Q{current + 1}: {currentQuestion.questionText}

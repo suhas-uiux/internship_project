@@ -8,6 +8,8 @@ import NotFound from './pages/NotFound';
 import Home from './pages/Home';
 import QuizSetup from './pages/QuizSetup';
 import Quiz from "./pages/Quiz";
+import ChatPage from './pages/ChatPage';
+
 import ProfilePage from './pages/ProfilePage';
 function App() {
   return (
@@ -22,7 +24,7 @@ function App() {
           <Route path="/topic/:topicName" element={<TopicPage />} />
           <Route path="/quiz/setup" element={<QuizSetup />} />
           <Route path="/quiz" element={<Quiz />} />
-
+          <Route path="/chat" element={<ChatPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
