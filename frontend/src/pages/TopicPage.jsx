@@ -6,24 +6,26 @@ import 'highlight.js/styles/github-dark.css';
 import axios from 'axios';
 
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
-const API_KEY = 'AIzaSyBfsdrS22wfY_G8lHVBVFnU8ZQyHw00pec'; // Replace with env var in prod
+const API_KEY = 'AIzaSyBfsdrS22wfY_G8lHVBVFnU8ZQyHw00pec';
 
 const getCurrentUsername = () => localStorage.getItem('username') || null;
 
 const getCompletedTopics = () => {
   const username = getCurrentUsername();
-  if (!username) return [];
-  return JSON.parse(localStorage.getItem(`completedTopics_${username}`) || '[]');
+  if (!username) return {};
+  const data = JSON.parse(localStorage.getItem(`completedTopics_${username}`) || '{}');
+  return typeof data === 'object' && !Array.isArray(data) ? data : {};
 };
 
-const saveCompletedTopic = (name) => {
+
+const saveCompletedTopic = (name, score) => {
   const username = getCurrentUsername();
   if (!username) return;
   const completed = getCompletedTopics();
-  if (!completed.includes(name)) {
-    localStorage.setItem(`completedTopics_${username}`, JSON.stringify([...completed, name]));
-  }
+  completed[name] = score;
+  localStorage.setItem(`completedTopics_${username}`, JSON.stringify(completed));
 };
+
 
 const TopicPage = () => {
   const { topicName } = useParams();
@@ -36,6 +38,7 @@ const TopicPage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [allowRetry, setAllowRetry] = useState(false);
 
   useEffect(() => {
     const filename = `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.md`;
@@ -50,6 +53,15 @@ const TopicPage = () => {
       })
       .catch(() => setMarkdownContent('# Content not found'));
   }, [name]);
+
+  useEffect(() => {
+    if (submitted && score < 6) {
+      const timer = setTimeout(() => setAllowRetry(true), 3000);
+      return () => clearTimeout(timer);
+    } else {
+      setAllowRetry(false);
+    }
+  }, [submitted, score]);
 
   const generateQuiz = async () => {
     setLoading(true);
@@ -104,10 +116,11 @@ Content:
     setScore(correct);
     setSubmitted(true);
 
-    if (correct >= 6) {
-      saveCompletedTopic(name);
-      setTimeout(() => navigate('/roadmap'), 2500);
-    }
+   if (correct >= 6) {
+  saveCompletedTopic(name, correct);
+  setTimeout(() => navigate('/roadmap'), 2500);
+}
+
   };
 
   const handleRetry = () => {
@@ -115,6 +128,7 @@ Content:
     setAnswers({});
     setSubmitted(false);
     setScore(0);
+    setAllowRetry(false);
   };
 
   return (
@@ -205,21 +219,41 @@ Content:
             ) : (
               <>
                 <div className="text-xl font-bold flex-1 self-center">
-                  You scored {score} / 10.
+                  <p className="mb-2">You scored {score} / 10</p>
+                  <div className="w-full bg-slate-600 rounded-full h-4 mt-2 mb-4">
+                    <div
+                      className={`h-4 rounded-full ${
+                        score >= 6 ? 'bg-green-500' : 'bg-red-500'
+                      }`}
+                      style={{ width: `${(score / 10) * 100}%` }}
+                    />
+                  </div>
                   {score >= 6 ? (
                     <p className="text-green-400 mt-2">
                       ✅ Great! Topic marked as completed. Redirecting...
                     </p>
                   ) : (
-                    <p className="text-red-400 mt-2">❌ Try again to unlock the next topic.</p>
+                    <>
+                      <p className="text-red-400 mt-2">
+                        ❌ Try again to unlock the next topic.
+                      </p>
+                      {!allowRetry && (
+                        <p className="text-yellow-300 text-sm mt-1">
+                          Retry will be available in 3 seconds...
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
-                <button
-                  onClick={handleRetry}
-                  className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 rounded-md font-semibold transition-colors duration-200"
-                >
-                  Retry Quiz
-                </button>
+
+                {allowRetry && (
+                  <button
+                    onClick={handleRetry}
+                    className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 rounded-md font-semibold transition-colors duration-200"
+                  >
+                    Retry Quiz
+                  </button>
+                )}
               </>
             )}
           </div>

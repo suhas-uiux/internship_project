@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -18,8 +19,8 @@ const getCurrentUsername = () => localStorage.getItem('username') || null;
 
 const getCompletedTopics = () => {
   const username = getCurrentUsername();
-  if (!username) return [];
-  return JSON.parse(localStorage.getItem(`completedTopics_${username}`) || '[]');
+  if (!username) return {};
+  return JSON.parse(localStorage.getItem(`completedTopics_${username}`) || '{}');
 };
 
 const Roadmap = () => {
@@ -39,10 +40,12 @@ const Roadmap = () => {
 
       if (!levels[level]) levels[level] = [];
       const topic = topics.find((t) => t.name === name);
-      levels[level].push(topic);
-      topic.children.forEach((childName) => {
-        queue.push({ name: childName, level: level + 1 });
-      });
+      if (topic) {
+        levels[level].push(topic);
+        topic.children.forEach((childName) => {
+          queue.push({ name: childName, level: level + 1 });
+        });
+      }
     }
     return levels;
   };
@@ -87,7 +90,7 @@ const Roadmap = () => {
     return topics.some(
       (parent) =>
         parent.children.includes(topic.name) &&
-        completedTopics.includes(parent.name)
+        parent.name in completedTopics
     );
   };
 

@@ -2,6 +2,37 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+// Utility function to save quiz results
+const saveQuizProgress = (topic, score) => {
+  const username = localStorage.getItem("username");
+  if (!username || !topic) return;
+
+  // Get roadmap topics list — update this list as per your real roadmap topics
+  const roadmapTopics = [
+    "Arrays&Hashing",
+    "Two Pointers",
+    "Sliding Window",
+    "Stack",
+    "Binary Search",
+    "Linked List",
+    "Trees",
+    "Tries",
+    "Heap/PQ",
+    "Backtracking",
+    "Graphs"
+  ];
+
+  const isRoadmap = roadmapTopics.includes(topic);
+
+  const storageKey = isRoadmap
+    ? `completedTopics_${username}`
+    : `completedSideQuests_${username}`;
+
+  const existingData = JSON.parse(localStorage.getItem(storageKey) || "{}");
+  existingData[topic] = score;
+  localStorage.setItem(storageKey, JSON.stringify(existingData));
+};
+
 const Quiz = () => {
   const [questions, setQuestions] = useState([]);
   const [current, setCurrent] = useState(0);
@@ -59,6 +90,7 @@ const Quiz = () => {
           return res.json();
         })
         .then((result) => {
+          saveQuizProgress(topic, result.score); // ← Save to roadmap or side quest
           navigate("/quiz/setup", {
             state: {
               quizResult: {

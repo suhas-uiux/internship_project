@@ -8,7 +8,7 @@ import NotFound from './pages/NotFound';
 import Home from './pages/Home';
 import QuizSetup from './pages/QuizSetup';
 import Quiz from "./pages/Quiz";
-
+import ProfilePage from './pages/ProfilePage';
 function App() {
   return (
     <div className="min-h-screen bg-slate-900">
@@ -18,6 +18,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/roadmap" element={<Roadmap />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/topic/:topicName" element={<TopicPage />} />
           <Route path="/quiz/setup" element={<QuizSetup />} />
           <Route path="/quiz" element={<Quiz />} />
