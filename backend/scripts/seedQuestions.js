@@ -5,8 +5,7 @@ const Question = require('../models/Question');
 dotenv.config();
 
 const sampleQuestions = [
-  
-  // Java topic questions
+  // --- Java Questions ---
   {
     topic: "Java",
     questionText: "What is the size of an int variable in Java?",
@@ -38,6 +37,38 @@ const sampleQuestions = [
     correctAnswerIndex: 0
   },
   {
+    topic: "Java",
+    questionText: "Which method is the entry point for a Java program?",
+    options: ["start()", "main()", "run()", "init()"],
+    correctAnswerIndex: 1
+  },
+  {
+    topic: "Java",
+    questionText: "Which of the following is used to create an object in Java?",
+    options: ["create", "new", "alloc", "init"],
+    correctAnswerIndex: 1
+  },
+  {
+    topic: "Java",
+    questionText: "Which of the following is not a primitive data type in Java?",
+    options: ["int", "boolean", "String", "char"],
+    correctAnswerIndex: 2
+  },
+  {
+    topic: "Java",
+    questionText: "What is the default value of a boolean variable in Java?",
+    options: ["true", "false", "0", "null"],
+    correctAnswerIndex: 1
+  },
+  {
+    topic: "Java",
+    questionText: "Which exception is thrown when a divide by zero occurs in Java?",
+    options: ["IOException", "ArithmeticException", "NullPointerException", "NumberFormatException"],
+    correctAnswerIndex: 1
+  },
+
+  // --- Python Questions ---
+  {
     topic: "Python",
     questionText: "Which of the following is the correct syntax to define a function in Python?",
     options: ["function myFunc():", "def myFunc():", "func myFunc():", "define myFunc():"],
@@ -66,13 +97,43 @@ const sampleQuestions = [
     questionText: "Which keyword is used to handle exceptions in Python?",
     options: ["catch", "except", "handle", "error"],
     correctAnswerIndex: 1
+  },
+  {
+    topic: "Python",
+    questionText: "Which of the following is used to create a list in Python?",
+    options: ["()", "{}", "[]", "<>"],
+    correctAnswerIndex: 2
+  },
+  {
+    topic: "Python",
+    questionText: "Which of the following is the correct way to write a for loop in Python?",
+    options: ["for(i = 0; i < 10; i++)", "for i in range(10):", "foreach i in range(10):", "loop i from 0 to 10"],
+    correctAnswerIndex: 1
+  },
+  {
+    topic: "Python",
+    questionText: "Which keyword is used to define a class in Python?",
+    options: ["class", "define", "object", "struct"],
+    correctAnswerIndex: 0
+  },
+  {
+    topic: "Python",
+    questionText: "Which function is used to get input from the user in Python?",
+    options: ["get()", "input()", "scanf()", "read()"],
+    correctAnswerIndex: 1
+  },
+  {
+    topic: "Python",
+    questionText: "What is the output of `bool('False')` in Python?",
+    options: ["False", "True", "0", "Error"],
+    correctAnswerIndex: 1
   }
-
 ];
 
 async function seedQuestions() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
+    await Question.deleteMany(); // optional: clears previous data
     await Question.insertMany(sampleQuestions);
     console.log("✅ Sample questions inserted.");
     process.exit();
