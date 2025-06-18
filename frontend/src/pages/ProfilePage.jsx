@@ -1,4 +1,7 @@
 import React from 'react';
+import {
+  PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
+} from 'recharts';
 
 // Utility: Get current logged-in username
 const getCurrentUsername = () => localStorage.getItem('username') || null;
@@ -19,6 +22,10 @@ const getCompletedSideQuests = () => {
   return typeof data === 'object' && !Array.isArray(data) ? data : {};
 };
 
+// Chart Colors
+const ROADMAP_COLORS = ['#10B981', '#374151']; // green, gray
+const SIDEQUEST_COLORS = ['#EC4899', '#374151']; // pink, gray
+
 const ProfilePage = () => {
   const username = getCurrentUsername();
   const completedTopics = getCompletedTopics();
@@ -34,15 +41,23 @@ const ProfilePage = () => {
 
   // Roadmap Progress
   const topicEntries = Object.entries(completedTopics);
-  const totalRoadmapTopics = 11; // Adjust this count as per your platform
+  const totalRoadmapTopics = 11;
   const roadmapCompletedCount = topicEntries.length;
   const roadmapCompletionPercent = Math.round((roadmapCompletedCount / totalRoadmapTopics) * 100);
+  const roadmapData = [
+    { name: 'Completed', value: roadmapCompletedCount },
+    { name: 'Remaining', value: totalRoadmapTopics - roadmapCompletedCount },
+  ];
 
-  // Side Quests Progress
+  // Side Quest Progress
   const sideQuestEntries = Object.entries(completedSideQuests);
-  const totalSideQuestTopics = 10; // Estimate or calculate dynamically if needed
+  const totalSideQuestTopics = 10;
   const sideQuestCompletedCount = sideQuestEntries.length;
   const sideQuestCompletionPercent = Math.round((sideQuestCompletedCount / totalSideQuestTopics) * 100);
+  const sideQuestData = [
+    { name: 'Completed', value: sideQuestCompletedCount },
+    { name: 'Remaining', value: totalSideQuestTopics - sideQuestCompletedCount },
+  ];
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 text-white">
@@ -51,21 +66,54 @@ const ProfilePage = () => {
         Username: <span className="font-mono text-blue-400">{username}</span>
       </p>
 
-      {/* Roadmap Progress Section */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2 text-green-300">📘 Roadmap Progress</h2>
-        <div className="w-full bg-gray-700 rounded-full h-6 overflow-hidden shadow-inner">
-          <div
-            className="bg-green-500 h-full text-xs font-bold text-white text-center flex items-center justify-center transition-all duration-500"
-            style={{ width: `${roadmapCompletionPercent}%` }}
-          >
-            {roadmapCompletionPercent}%
-          </div>
+      {/* Graphs Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-14">
+        {/* Roadmap Chart */}
+        <div className="bg-slate-800 p-6 rounded-xl shadow-md">
+          <h3 className="text-xl font-semibold mb-4 text-green-300">📘 Roadmap Progress Chart</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart>
+              <Pie
+                data={roadmapData}
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                dataKey="value"
+                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              >
+                {roadmapData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={ROADMAP_COLORS[index % ROADMAP_COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
         </div>
-        <p className="text-sm text-gray-300 mt-2">
-          {roadmapCompletedCount} out of {totalRoadmapTopics} topics completed
-        </p>
-      </section>
+
+        {/* Side Quest Chart */}
+        <div className="bg-slate-800 p-6 rounded-xl shadow-md">
+          <h3 className="text-xl font-semibold mb-4 text-pink-300">🧩 Side Quest Progress Chart</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart>
+              <Pie
+                data={sideQuestData}
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                dataKey="value"
+                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              >
+                {sideQuestData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={SIDEQUEST_COLORS[index % SIDEQUEST_COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      
 
       {/* Completed Roadmap Topics */}
       <section className="mb-16">
@@ -89,21 +137,7 @@ const ProfilePage = () => {
         )}
       </section>
 
-      {/* Side Quest Progress */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2 text-purple-300">🧩 Side Quest Progress</h2>
-        <div className="w-full bg-gray-700 rounded-full h-6 overflow-hidden shadow-inner">
-          <div
-            className="bg-purple-500 h-full text-xs font-bold text-white text-center flex items-center justify-center transition-all duration-500"
-            style={{ width: `${sideQuestCompletionPercent}%` }}
-          >
-            {sideQuestCompletionPercent}%
-          </div>
-        </div>
-        <p className="text-sm text-gray-300 mt-2">
-          {sideQuestCompletedCount} out of {totalSideQuestTopics} side quests completed
-        </p>
-      </section>
+  
 
       {/* Completed Side Quests */}
       <section>

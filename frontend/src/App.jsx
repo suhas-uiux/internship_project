@@ -9,6 +9,8 @@ import Home from './pages/Home';
 import QuizSetup from './pages/QuizSetup';
 import Quiz from "./pages/Quiz";
 import ChatPage from './pages/ChatPage';
+import ContentPage from './pages/Contentpage';
+import Database from './pages/Database'
 
 import ProfilePage from './pages/ProfilePage';
 function App() {
@@ -19,7 +21,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/content" element={<ContentPage />} />
           <Route path="/roadmap" element={<Roadmap />} />
+          <Route path="/database" element={<Database/>}/>
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/topic/:topicName" element={<TopicPage />} />
           <Route path="/quiz/setup" element={<QuizSetup />} />

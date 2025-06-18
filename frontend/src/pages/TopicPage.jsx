@@ -17,7 +17,6 @@ const getCompletedTopics = () => {
   return typeof data === 'object' && !Array.isArray(data) ? data : {};
 };
 
-
 const saveCompletedTopic = (name, score) => {
   const username = getCurrentUsername();
   if (!username) return;
@@ -25,7 +24,6 @@ const saveCompletedTopic = (name, score) => {
   completed[name] = score;
   localStorage.setItem(`completedTopics_${username}`, JSON.stringify(completed));
 };
-
 
 const TopicPage = () => {
   const { topicName } = useParams();
@@ -116,11 +114,10 @@ Content:
     setScore(correct);
     setSubmitted(true);
 
-   if (correct >= 6) {
-  saveCompletedTopic(name, correct);
-  setTimeout(() => navigate('/roadmap'), 2500);
-}
-
+    if (correct >= 6) {
+      saveCompletedTopic(name, correct);
+      setTimeout(() => navigate('/roadmap'), 2500);
+    }
   };
 
   const handleRetry = () => {
@@ -132,95 +129,96 @@ Content:
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10 text-slate-100">
-      <h1 className="text-4xl font-semibold mb-6">{name}</h1>
-      <Link
-        to="/roadmap"
-        className="inline-block mb-8 text-blue-500 hover:text-blue-600 transition-colors duration-200"
-      >
-        ← Back to Roadmap
-      </Link>
-
-      <article className="prose prose-invert max-w-none bg-slate-800 rounded-lg p-6 mb-10 shadow-md prose-code:text-green-400 prose-pre:bg-slate-900 prose-pre:rounded-md">
-        <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{markdownContent}</ReactMarkdown>
-      </article>
-
-      {quiz.length === 0 && !loading && (
-        <button
-          onClick={generateQuiz}
-          className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-md font-semibold transition-colors duration-200"
+    <div className="max-w-5xl mx-auto px-6 py-12 text-white relative font-sans">
+      <div className="absolute inset-0 z-0 bg-gradient-to-tr from-[#0f172a] via-[#1e293b] to-[#0f172a] opacity-95 backdrop-blur-lg" />
+      
+      <div className="relative z-10">
+        <h1 className="text-5xl font-bold mb-6 text-cyan-300 drop-shadow-lg">{name}</h1>
+        <Link
+          to="/roadmap"
+          className="inline-block mb-8 text-blue-400 hover:text-blue-500 underline underline-offset-4 transition"
         >
-          Generate Quiz
-        </button>
-      )}
+          ← Back to Roadmap
+        </Link>
 
-      {loading && <p className="text-center text-gray-300 mt-4">Generating quiz...</p>}
+        <article className="prose prose-invert max-w-none bg-white/5 backdrop-blur-md rounded-xl p-6 mb-12 shadow-2xl prose-code:text-green-400 prose-pre:bg-slate-900 prose-pre:rounded-md">
+          <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{markdownContent}</ReactMarkdown>
+        </article>
 
-      {quiz.length > 0 && (
-        <section className="space-y-8">
-          <h2 className="text-3xl font-semibold text-yellow-400 mb-6">Quiz</h2>
-          {quiz.map((q, idx) => (
-            <div key={idx} className="bg-slate-700 rounded-lg p-5 shadow-sm">
-              <p className="font-semibold mb-3 text-lg">
-                {idx + 1}. {q.question}
-              </p>
-              <div className="flex flex-col gap-3">
-                {q.options.map((opt, i) => {
-                  const isSelected = answers[idx] === opt;
-                  const isCorrect = submitted && opt === q.answer;
-                  const isWrong = submitted && isSelected && opt !== q.answer;
+        {quiz.length === 0 && !loading && (
+          <button
+            onClick={generateQuiz}
+            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 rounded-xl text-white font-semibold shadow-lg transition duration-200"
+          >
+            🚀 Generate Quiz
+          </button>
+        )}
 
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => handleAnswer(idx, opt)}
-                      disabled={submitted}
-                      className={`w-full text-left px-4 py-2 rounded-md border transition-colors duration-200
-                        ${
-                          submitted
-                            ? isCorrect
-                              ? 'bg-green-600 border-green-500 text-white'
-                              : isWrong
-                              ? 'bg-red-600 border-red-500 text-white'
-                              : 'bg-slate-700 border-slate-600 text-gray-300 cursor-not-allowed'
-                            : isSelected
-                            ? 'bg-purple-600 border-purple-500 text-white'
-                            : 'bg-slate-800 border-slate-700 hover:bg-slate-700'
-                        }
-                      `}
-                    >
-                      {opt}
-                    </button>
-                  );
-                })}
-              </div>
-              {submitted && (
-                <p
-                  className={`mt-3 font-semibold ${
-                    answers[idx] === q.answer ? 'text-green-400' : 'text-red-400'
-                  }`}
-                >
-                  {answers[idx] === q.answer
-                    ? 'Correct!'
-                    : `Wrong. Correct answer: ${q.answer}`}
+        {loading && <p className="text-center text-yellow-300 mt-4 text-lg animate-pulse">Generating quiz...</p>}
+
+        {quiz.length > 0 && (
+          <section className="mt-10 space-y-10">
+            <h2 className="text-4xl font-semibold text-yellow-300 mb-4">📝 Quiz</h2>
+            {quiz.map((q, idx) => (
+              <div key={idx} className="bg-slate-800/60 border border-slate-600 rounded-xl p-6 shadow-md transition-all">
+                <p className="font-medium text-lg mb-3">
+                  {idx + 1}. {q.question}
                 </p>
-              )}
-            </div>
-          ))}
+                <div className="grid gap-3">
+                  {q.options.map((opt, i) => {
+                    const isSelected = answers[idx] === opt;
+                    const isCorrect = submitted && opt === q.answer;
+                    const isWrong = submitted && isSelected && opt !== q.answer;
 
-          <div className="mt-6 flex gap-4">
-            {!submitted ? (
-              <button
-                onClick={handleSubmit}
-                className="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-md font-semibold transition-colors duration-200"
-              >
-                Submit Quiz
-              </button>
-            ) : (
-              <>
-                <div className="text-xl font-bold flex-1 self-center">
-                  <p className="mb-2">You scored {score} / 10</p>
-                  <div className="w-full bg-slate-600 rounded-full h-4 mt-2 mb-4">
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => handleAnswer(idx, opt)}
+                        disabled={submitted}
+                        className={`px-5 py-3 text-left rounded-lg border text-white font-medium transition
+                          ${
+                            submitted
+                              ? isCorrect
+                                ? 'bg-green-600 border-green-500'
+                                : isWrong
+                                ? 'bg-red-600 border-red-500'
+                                : 'bg-slate-700 border-slate-600 cursor-not-allowed'
+                              : isSelected
+                              ? 'bg-purple-600 border-purple-500'
+                              : 'bg-slate-800 border-slate-700 hover:bg-slate-700'
+                          }`}
+                      >
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+                {submitted && (
+                  <p
+                    className={`mt-3 font-semibold ${
+                      answers[idx] === q.answer ? 'text-green-400' : 'text-red-400'
+                    }`}
+                  >
+                    {answers[idx] === q.answer
+                      ? '✅ Correct!'
+                      : `❌ Wrong. Correct: ${q.answer}`}
+                  </p>
+                )}
+              </div>
+            ))}
+
+            <div className="mt-10 flex flex-col md:flex-row items-center gap-6">
+              {!submitted ? (
+                <button
+                  onClick={handleSubmit}
+                  className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-lg transition"
+                >
+                  Submit Quiz
+                </button>
+              ) : (
+                <div className="flex-1">
+                  <p className="text-xl mb-2">You scored {score} / 10</p>
+                  <div className="w-full bg-slate-600 rounded-full h-4 mb-3">
                     <div
                       className={`h-4 rounded-full ${
                         score >= 6 ? 'bg-green-500' : 'bg-red-500'
@@ -229,36 +227,32 @@ Content:
                     />
                   </div>
                   {score >= 6 ? (
-                    <p className="text-green-400 mt-2">
-                      ✅ Great! Topic marked as completed. Redirecting...
-                    </p>
+                    <p className="text-green-400">🎉 Topic completed. Redirecting...</p>
                   ) : (
                     <>
-                      <p className="text-red-400 mt-2">
-                        ❌ Try again to unlock the next topic.
-                      </p>
+                      <p className="text-red-400">❌ Try again to unlock next topic.</p>
                       {!allowRetry && (
                         <p className="text-yellow-300 text-sm mt-1">
-                          Retry will be available in 3 seconds...
+                          Retry available in 3 seconds...
                         </p>
                       )}
                     </>
                   )}
                 </div>
+              )}
 
-                {allowRetry && (
-                  <button
-                    onClick={handleRetry}
-                    className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 rounded-md font-semibold transition-colors duration-200"
-                  >
-                    Retry Quiz
-                  </button>
-                )}
-              </>
-            )}
-          </div>
-        </section>
-      )}
+              {allowRetry && (
+                <button
+                  onClick={handleRetry}
+                  className="px-8 py-3 bg-yellow-600 hover:bg-yellow-700 text-white rounded-xl font-semibold transition"
+                >
+                  🔁 Retry Quiz
+                </button>
+              )}
+            </div>
+          </section>
+        )}
+      </div>
     </div>
   );
 };

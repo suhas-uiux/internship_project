@@ -13,15 +13,12 @@ const QuizSetup = () => {
 
   const username = getCurrentUsername();
 
-  // Load history for the current user
   useEffect(() => {
     if (!username) return;
-
     const saved = localStorage.getItem(`quizHistory_${username}`);
     setHistory(saved ? JSON.parse(saved) : []);
   }, [username]);
 
-  // Save new result if present
   useEffect(() => {
     const newResult = location.state?.quizResult;
     if (!newResult || !username) return;
@@ -40,36 +37,48 @@ const QuizSetup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6 flex flex-col items-center">
-      <div className="bg-[#1a1a2e] p-8 rounded-xl shadow-md max-w-md w-full">
-        <h2 className="text-xl font-bold mb-6 text-center">Start a New Quiz</h2>
-        <input
-          type="text"
-          placeholder="Topic (e.g., JavaScript)"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
-          className="w-full px-4 py-2 rounded bg-gray-800 mb-4"
-        />
-        <input
-          type="number"
-          placeholder="Number of Questions"
-          value={count}
-          onChange={(e) => setCount(Number(e.target.value))}
-          className="w-full px-4 py-2 rounded bg-gray-800 mb-6"
-        />
-        <button
-          onClick={handleStart}
-          className="w-full py-2 bg-purple-700 hover:bg-purple-800 rounded"
+    <div className="min-h-screen bg-[#0f0f1a] text-white p-6 flex flex-col items-center font-inter">
+      {/* Glowing Background */}
+      <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-purple-500 blur-[150px] opacity-30 rounded-full pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[250px] h-[250px] bg-cyan-500 blur-[150px] opacity-30 rounded-full pointer-events-none" />
+
+      <div className="z-10 bg-white/5 backdrop-blur-lg border border-white/10 p-8 rounded-xl shadow-2xl w-full max-w-md mt-12">
+        <h2
+          className="text-3xl font-orbitron font-bold mb-6 text-center tracking-wider text-cyan-300 drop-shadow-[0_0_8px_rgba(0,255,255,0.6)]"
         >
-          Start Quiz
-        </button>
+          Start a New Quiz
+        </h2>
+        <div className="space-y-4">
+          <input
+            type="text"
+            placeholder="Topic (e.g., JavaScript)"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          />
+          <input
+            type="number"
+            placeholder="Number of Questions"
+            value={count}
+            onChange={(e) => setCount(Number(e.target.value))}
+            className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-400"
+          />
+          <button
+            onClick={handleStart}
+            className="w-full py-2 bg-gradient-to-r from-cyan-400 to-purple-500 hover:scale-[1.03] rounded text-black font-semibold transition-all shadow-lg"
+          >
+            Start Quiz
+          </button>
+        </div>
       </div>
 
       {history.length > 0 && (
-        <div className="mt-10 w-full max-w-2xl">
-          <h3 className="text-lg font-semibold mb-4">Quiz History ({username})</h3>
-          <table className="w-full border-collapse text-sm bg-gray-800 rounded overflow-hidden">
-            <thead className="bg-gray-700 text-white">
+        <div className="z-10 mt-10 w-full max-w-2xl bg-white/5 backdrop-blur-lg p-6 rounded-xl border border-white/10 shadow-lg">
+          <h3 className="text-xl font-orbitron font-semibold mb-4 text-cyan-300 tracking-wide">
+            Quiz History <span className="text-white/60">({username})</span>
+          </h3>
+          <table className="w-full border-collapse text-sm text-white/90">
+            <thead className="bg-white/10 text-cyan-200 font-semibold">
               <tr>
                 <th className="py-2 px-4 text-left">Topic</th>
                 <th className="py-2 px-4 text-left">Questions</th>
@@ -78,7 +87,7 @@ const QuizSetup = () => {
             </thead>
             <tbody>
               {history.map((h, idx) => (
-                <tr key={idx} className="border-t border-gray-700">
+                <tr key={idx} className="border-t border-white/10 hover:bg-white/10 transition">
                   <td className="py-2 px-4">{h.topic}</td>
                   <td className="py-2 px-4">{h.total}</td>
                   <td className="py-2 px-4">{h.score}</td>
