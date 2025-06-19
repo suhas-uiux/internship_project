@@ -102,7 +102,6 @@ const Roadmap = () => {
     );
   };
 
-  // Handle quiz completion result from location state
   useEffect(() => {
     const result = location.state?.quizResult;
     if (!result) return;
@@ -170,14 +169,37 @@ const Roadmap = () => {
         ))}
       </div>
 
+      {/* ✅ Home Button */}
+      <div className="mt-24 flex justify-center z-10 relative">
+        <Link
+          to="/"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl shadow-lg transition duration-300"
+        >
+          ⬅ Back to Home
+        </Link>
+      </div>
+
       {modal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-slate-800 rounded-xl p-8 text-white w-full max-w-md shadow-2xl">
             <h2 className="text-xl font-bold mb-4">Next Topic Unlocked!</h2>
-            <p className="mb-6">You've successfully completed the quiz. Would you like to continue to <span className="text-purple-400">{modal.next}</span>?</p>
+            <p className="mb-6">
+              You've successfully completed the quiz. Would you like to continue to{' '}
+              <span className="text-purple-400">{modal.next}</span>?
+            </p>
             <div className="flex justify-end gap-4">
-              <button onClick={() => setModal(null)} className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700">Later</button>
-              <button onClick={() => navigate(`/topic/${encodeURIComponent(modal.next)}`)} className="bg-purple-600 px-4 py-2 rounded hover:bg-purple-700">Continue</button>
+              <button
+                onClick={() => setModal(null)}
+                className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700"
+              >
+                Later
+              </button>
+              <button
+                onClick={() => navigate(`/topic/${encodeURIComponent(modal.next)}`)}
+                className="bg-purple-600 px-4 py-2 rounded hover:bg-purple-700"
+              >
+                Continue
+              </button>
             </div>
           </div>
         </div>

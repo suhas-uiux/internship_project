@@ -6,7 +6,7 @@ const Question = require('../models/Question');
 // @desc Get random questions (optionally filtered by topic)
 router.get('/:count', async (req, res) => {
   const count = parseInt(req.params.count);
-  const topic = req.query.topic; // e.g., ?topic=Java
+  const topic = req.query.topic;
 
   if (!count || isNaN(count) || count <= 0) {
     return res.status(400).json({ error: 'Invalid count parameter' });
@@ -24,6 +24,7 @@ router.get('/:count', async (req, res) => {
 
     const formatted = questions.map(q => ({
       _id: q._id,
+      topic: q.topic,
       questionText: q.questionText,
       options: q.options
     }));
@@ -38,7 +39,7 @@ router.get('/:count', async (req, res) => {
 // @route POST /quiz/submit
 // @desc Submit answers and calculate score
 router.post('/submit', async (req, res) => {
-  const { answers } = req.body; // format: [{ questionId, selectedIndex }]
+  const { answers } = req.body; // [{ questionId, selectedIndex }]
 
   if (!Array.isArray(answers) || answers.length === 0) {
     return res.status(400).json({ error: 'Invalid or empty answers array' });
@@ -49,14 +50,29 @@ router.post('/submit', async (req, res) => {
     const questions = await Question.find({ _id: { $in: ids } });
 
     let score = 0;
+    const detailedResults = [];
+
     answers.forEach(ans => {
       const q = questions.find(q => q._id.toString() === ans.questionId);
-      if (q && q.correctAnswerIndex === ans.selectedIndex) {
-        score++;
-      }
+      if (!q) return;
+
+      const isCorrect = q.correctAnswerIndex === ans.selectedIndex;
+      if (isCorrect) score++;
+
+      detailedResults.push({
+        questionId: q._id,
+        questionText: q.questionText,
+        selectedIndex: ans.selectedIndex,
+        correctAnswerIndex: q.correctAnswerIndex,
+        isCorrect
+      });
     });
 
-    res.json({ score, total: answers.length });
+    res.json({
+      score,
+      total: answers.length,
+      detailedResults
+    });
   } catch (err) {
     console.error('Error evaluating answers:', err);
     res.status(500).json({ error: 'Failed to evaluate answers' });
