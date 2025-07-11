@@ -1,4 +1,4 @@
-const Message = require('./models/Message');
+const Message = require('../models/Message');
 
 function chatSocket(io) {
   io.on('connection', (socket) => {
