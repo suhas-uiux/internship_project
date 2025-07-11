@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { motion } from 'framer-motion';
 
+// ✅ Singleton socket instance
 const socket = io(import.meta.env.VITE_CHAT_SERVER_URL || 'http://localhost:5000', {
   transports: ['websocket'],
   autoConnect: true,
+  withCredentials: true,
 });
 
 export default function ChatPage() {
@@ -17,35 +19,41 @@ export default function ChatPage() {
   const fileInputRef = useRef(null);
   const messagesEnd = useRef(null);
 
-  // Handle socket connections and events
+  // ✅ Reconnect-safe socket listeners
   useEffect(() => {
-    const onConnect = () => {
-      socket.emit('join', username);
-    };
+  const handleConnect = () => {
+    console.log('🔁 Socket connected:', socket.id);
+    socket.emit('join', username);
+  };
 
-    socket.on('connect', onConnect);
-    socket.on('chatHistory', setMessages);
-    socket.on('chatMessage', msg => setMessages(prev => [...prev, msg]));
-    socket.on('messageDeleted', id => setMessages(prev => prev.filter(m => m.id !== id)));
-    socket.on('updateReactions', ({ id, reactions }) =>
-      setMessages(prev => prev.map(m => (m.id === id ? { ...m, reactions } : m)))
-    );
+  // ✅ Always emit join — even if already connected
+  if (socket.connected) {
+    socket.emit('join', username);
+  }
 
-    return () => {
-      socket.off('connect', onConnect);
-      socket.off('chatHistory');
-      socket.off('chatMessage');
-      socket.off('messageDeleted');
-      socket.off('updateReactions');
-    };
-  }, [username]);
+  socket.on('connect', handleConnect);
+  socket.on('chatHistory', setMessages);
+  socket.on('chatMessage', msg => setMessages(prev => [...prev, msg]));
+  socket.on('messageDeleted', id => setMessages(prev => prev.filter(m => m.id !== id)));
+  socket.on('updateReactions', ({ id, reactions }) =>
+    setMessages(prev => prev.map(m => (m.id === id ? { ...m, reactions } : m)))
+  );
 
-  // Auto-scroll to bottom
+  return () => {
+    socket.off('connect', handleConnect);
+    socket.off('chatHistory');
+    socket.off('chatMessage');
+    socket.off('messageDeleted');
+    socket.off('updateReactions');
+  };
+}, [username]);
+
+
+  // Auto-scroll on new message
   useEffect(() => {
     messagesEnd.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Handle sending messages (text, image, reply)
   const sendMsg = () => {
     if (!input.trim() && !imagePreview) return;
     socket.emit('sendMessage', {
@@ -59,14 +67,12 @@ export default function ChatPage() {
     setImagePreview(null);
   };
 
-  // Option handlers
   const deleteMsg = id => socket.emit('deleteMessage', id);
   const toggleReaction = (id, emoji) => {
     socket.emit('reactToMessage', { msgId: id, emoji, user: username });
     setReactionDrawerId(null);
   };
 
-  // Image file selection & preview
   const handleImageChange = e => {
     const file = e.target.files[0];
     if (!file) return;
@@ -79,7 +85,6 @@ export default function ChatPage() {
     <div className="flex flex-col h-screen bg-gray-900 text-white">
       <header className="p-4 bg-gray-800 text-xl">Chat Room</header>
 
-      {/* Chat messages list */}
       <main className="flex-grow overflow-auto p-4 space-y-2">
         {messages.map(msg => {
           const isOwn = msg.author === username;
@@ -149,7 +154,6 @@ export default function ChatPage() {
         <div ref={messagesEnd} />
       </main>
 
-      {/* Image preview + cancel button */}
       {imagePreview && (
         <div className="p-4 flex items-center bg-gray-800">
           <img src={imagePreview} alt="preview" className="w-32 h-32 object-cover rounded" />
@@ -157,7 +161,6 @@ export default function ChatPage() {
         </div>
       )}
 
-      {/* Reply info bar */}
       {replyTo && (
         <div className="bg-gray-700 p-2 flex justify-between items-center">
           Replying to <strong>{replyTo.author}</strong>: {replyTo.text}
@@ -165,10 +168,8 @@ export default function ChatPage() {
         </div>
       )}
 
-      {/* Input toolbar */}
       <footer className="p-4 flex items-center bg-gray-800 space-x-2">
         <button onClick={() => fileInputRef.current.click()} className="px-3 py-2 bg-gray-700 rounded-full">📎</button>
-
         <input
           type="file"
           accept="image/*"
@@ -176,7 +177,6 @@ export default function ChatPage() {
           onChange={handleImageChange}
           style={{ display: 'none' }}
         />
-
         <input
           value={input}
           onChange={e => setInput(e.target.value)}
@@ -184,7 +184,6 @@ export default function ChatPage() {
           placeholder="Type a message…"
           className="flex-grow p-2 rounded-full bg-gray-700"
         />
-
         <button onClick={sendMsg} className="px-4 py-2 bg-blue-500 rounded-full">Send</button>
       </footer>
     </div>

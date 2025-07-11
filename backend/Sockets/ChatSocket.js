@@ -18,7 +18,7 @@ function chatSocket(io) {
         text: m.text,
         image: m.image,
         createdAt: m.createdAt,
-        reactions: Object.fromEntries(m.reactions || []),
+        reactions: m.reactions || {},  // ✅ fixed
         repliedToMessage: m.replyTo
           ? { id: m.replyTo._id.toString(), author: m.replyTo.author, text: m.replyTo.text }
           : null
@@ -40,7 +40,7 @@ function chatSocket(io) {
 
       const saved = newMsg.toObject();
       saved.id = saved._id.toString();
-      saved.reactions = Object.fromEntries(newMsg.reactions || []);
+      saved.reactions = newMsg.reactions || {};  // ✅ fixed
       saved.repliedToMessage = newMsg.replyTo
         ? { id: newMsg.replyTo._id.toString(), author: newMsg.replyTo.author, text: newMsg.replyTo.text }
         : null;
@@ -57,11 +57,14 @@ function chatSocket(io) {
       const msg = await Message.findById(msgId);
       if (!msg) return;
 
-      const users = msg.reactions.get(emoji) || [];
+      const users = msg.reactions.get?.(emoji) || [];
       const idx = users.indexOf(user);
+
       if (idx !== -1) {
         users.splice(idx, 1);
-        users.length ? msg.reactions.set(emoji, users) : msg.reactions.delete(emoji);
+        users.length
+          ? msg.reactions.set(emoji, users)
+          : msg.reactions.delete(emoji);
       } else {
         msg.reactions.set(emoji, [...users, user]);
       }
@@ -70,7 +73,9 @@ function chatSocket(io) {
 
       io.emit('updateReactions', {
         id: msg._id.toString(),
-        reactions: Object.fromEntries(msg.reactions)
+        reactions: msg.reactions instanceof Map
+          ? Object.fromEntries(msg.reactions)
+          : msg.reactions || {},  // ✅ safe fallback
       });
     });
   });
