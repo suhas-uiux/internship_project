@@ -66,6 +66,36 @@ const sampleQuestions = [
     questionText: "Which keyword is used to handle exceptions in Python?",
     options: ["catch", "except", "handle", "error"],
     correctAnswerIndex: 1
+  },
+  {
+    topic: "C",
+    questionText: "Which of the following is a valid keyword in C?",
+    options: ["for", "foreach", "loop", "repeat"],
+    correctAnswerIndex: 0
+  },
+  {
+    topic: "C",
+    questionText: "What is the correct syntax to declare a pointer in C?",
+    options: ["int ptr", "int *ptr", "ptr int*", "pointer int ptr"],
+    correctAnswerIndex: 1
+  },
+  {
+    topic: "C",
+    questionText: "Which of the following data types has the largest size in C?",
+    options: ["int", "short", "long", "char"],
+    correctAnswerIndex: 2
+  },
+  {
+    topic: "C",
+    questionText: "What will `sizeof(char)` return on most systems?",
+    options: ["1", "2", "4", "8"],
+    correctAnswerIndex: 0
+  },
+  {
+    topic: "C",
+    questionText: "Which function is used to print output to the console in C?",
+    options: ["print()", "System.out.println()", "cout <<", "printf()"],
+    correctAnswerIndex: 3
   }
 
 ];

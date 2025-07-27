@@ -17,20 +17,22 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-900">
       <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/content" element={<ContentPage />} />
-          <Route path="/roadmap" element={<Roadmap />} />
-          <Route path="/database" element={<Database/>}/>
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/topic/:topicName" element={<TopicPage />} />
-          <Route path="/quiz/setup" element={<QuizSetup />} />
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+      <Routes>
+  <Route path="/" element={<Home />} />
+  <Route path="/login" element={<Login />} />
+  <Route path="/register" element={<Register />} />
+  <Route path="/content" element={<ContentPage />} />
+  <Route path="/roadmap" element={<Roadmap />} /> {/* Keep if you want a default roadmap */}
+  <Route path="/roadmap/:section" element={<Roadmap />} /> {/* ✅ NEW DYNAMIC ROUTE */}
+  <Route path="/database" element={<Database />} />
+  <Route path="/profile" element={<ProfilePage />} />
+  <Route path="/topic/:topicName" element={<TopicPage />} />
+  <Route path="/quiz/setup" element={<QuizSetup />} />
+  <Route path="/quiz" element={<Quiz />} />
+  <Route path="/chat" element={<ChatPage />} />
+  <Route path="*" element={<NotFound />} />
+</Routes>
+
       </Router>
     </div>
   );

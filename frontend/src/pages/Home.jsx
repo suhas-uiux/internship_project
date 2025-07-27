@@ -64,11 +64,11 @@ const Home = () => {
     const glow = "shadow-[0_0_30px_3px_rgba(0,255,255,0.4)]";
 
     if (position === 0)
-      return `${baseStyle} -translate-x-[110%] rotate-y-45 scale-75 z-0 opacity-40 pointer-events-none`;
+      return `${baseStyle} translate-x-[100%] -rotate-y-45 scale-75 z-0 opacity-40 pointer-events-none`;
     else if (position === 1)
       return `${baseStyle} bg-white/10 scale-100 z-10 ${glow} hover:scale-105 shadow-md backdrop-blur-lg`;
     else if (position === 2)
-      return `${baseStyle} translate-x-[110%] -rotate-y-45 scale-75 z-0 opacity-40 pointer-events-none`;
+      return `${baseStyle} -translate-x-[100%] rotate-y-45 scale-75 z-0 opacity-40 pointer-events-none`;
     else return "hidden";
   };
 
