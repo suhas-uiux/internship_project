@@ -10,7 +10,10 @@ import QuizSetup from './pages/QuizSetup';
 import Quiz from "./pages/Quiz";
 import ChatPage from './pages/ChatPage';
 import ContentPage from './pages/Contentpage';
-import Database from './pages/Database'
+import Database from './pages/Database';
+// import QuizPage from './pages/QuizPage'; // Adjust path accordingly
+
+
 
 import ProfilePage from './pages/ProfilePage';
 function App() {
@@ -27,6 +30,7 @@ function App() {
   <Route path="/database" element={<Database />} />
   <Route path="/profile" element={<ProfilePage />} />
   <Route path="/topic/:topicName" element={<TopicPage />} />
+  {/* <Route path="/quiz/test" element={<QuizPage />} /> */}
   <Route path="/quiz/setup" element={<QuizSetup />} />
   <Route path="/quiz" element={<Quiz />} />
   <Route path="/chat" element={<ChatPage />} />

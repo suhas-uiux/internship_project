@@ -1,186 +1,171 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import {
-  FaMapSigns,
-  FaUserAlt,
-  FaQuestionCircle,
-  FaSignInAlt,
-  FaUserPlus,
-  FaCommentDots,
-  FaSignOutAlt,
-} from "react-icons/fa";
-import LogoutButton from "./LogoutButton";
-import ModalAlert from "../components/ModalAlert";
+import { Link } from "react-router-dom";
+import { FaBook, FaArrowRight } from "react-icons/fa";
+import Navbar from "../components/Navbar";
 
-const cards = [
-  { title: "ROADMAP", icon: <FaMapSigns size={40} /> },
-  { title: "PROFILE", icon: <FaUserAlt size={40} /> },
-  { title: "QUIZES", icon: <FaQuestionCircle size={40} /> },
+const courses = [
+  {
+    id: 1,
+    title: "Data Structures & Algorithms",
+    description: "Master DSA with comprehensive learning paths from basics to advanced concepts.",
+    icon: <FaBook className="text-4xl" />,
+    color: "from-blue-500 to-blue-600",
+    topics: 15,
+    link: "/roadmap/dsa"
+  },
+  {
+    id: 2,
+    title: "Database Management System",
+    description: "Learn DBMS concepts, SQL, and database design from fundamentals.",
+    icon: <FaBook className="text-4xl" />,
+    color: "from-green-500 to-green-600",
+    topics: 8,
+    link: "/roadmap/dbms"
+  },
+  {
+    id: 3,
+    title: "Operating Systems",
+    description: "Understand OS fundamentals, processes, threads, and memory management.",
+    icon: <FaBook className="text-4xl" />,
+    color: "from-purple-500 to-purple-600",
+    topics: 10,
+    link: "/roadmap/os"
+  },
+  {
+    id: 4,
+    title: "System Design",
+    description: "Learn scalability, architecture, and design patterns for large systems.",
+    icon: <FaBook className="text-4xl" />,
+    color: "from-orange-500 to-orange-600",
+    topics: 7,
+    link: "/roadmap/system-design"
+  }
+];
+
+const stats = [
+  { label: "Courses", value: "4+" },
+  { label: "Topics", value: "40+" },
+  { label: "Quizzes", value: "100+" }
 ];
 
 const Home = () => {
-  const [currentIndex, setCurrentIndex] = useState(1);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
-
-  const handleLeftClick = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? cards.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleRightClick = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === cards.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const handleCardClick = (card, index) => {
-    const position = (index - currentIndex + cards.length) % cards.length;
-    if (position !== 1) return;
-
-    if (!isLoggedIn) {
-      setAlertMessage("Please login to access this section.");
-      setShowAlert(true);
-      return;
-    }
-
-    if (card.title === "ROADMAP") navigate("/content");
-    if (card.title === "PROFILE") navigate("/profile");
-    if (card.title === "QUIZES") navigate("/quiz/setup");
-  };
-
-  const getCardStyle = (index) => {
-    const position = (index - currentIndex + cards.length) % cards.length;
-    const baseStyle =
-      "absolute w-72 h-80 p-6 rounded-2xl text-white flex flex-col items-center justify-center transition-all duration-700 ease-in-out cursor-pointer backdrop-blur-md border border-white/20";
-
-    const glow = "shadow-[0_0_30px_3px_rgba(0,255,255,0.4)]";
-
-    if (position === 0)
-      return `${baseStyle} translate-x-[100%] -rotate-y-45 scale-75 z-0 opacity-40 pointer-events-none`;
-    else if (position === 1)
-      return `${baseStyle} bg-white/10 scale-100 z-10 ${glow} hover:scale-105 shadow-md backdrop-blur-lg`;
-    else if (position === 2)
-      return `${baseStyle} -translate-x-[100%] rotate-y-45 scale-75 z-0 opacity-40 pointer-events-none`;
-    else return "hidden";
-  };
+  const [isLoggedIn] = useState(!!localStorage.getItem("token"));
 
   return (
-    <div className="h-screen w-screen bg-[#0f0f1a] text-white font-['Inter'] flex flex-col items-center justify-center overflow-hidden relative">
-      {/* Neon Background Glow */}
-      <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-cyan-500 blur-[150px] opacity-30 rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[250px] h-[250px] bg-purple-500 blur-[150px] opacity-30 rounded-full pointer-events-none" />
-
-      {/* Title */}
-      <h1
-        className="absolute top-10 left-1/2 transform -translate-x-1/2 text-5xl font-extrabold tracking-wider drop-shadow-[0_0_20px_rgba(0,255,255,0.6)]"
-        style={{ fontFamily: "'Orbitron', sans-serif" }}
-      >
-        CrackIT
-      </h1>
-
-      {/* Auth Buttons */}
-      <div className="absolute top-8 right-10 flex space-x-4">
-        {isLoggedIn ? (
-          <>
-            <button
-              onClick={handleLogout}
-              className="group flex items-center gap-2 px-4 py-2 border border-white rounded bg-white/10 hover:bg-cyan-400 hover:text-[#0f0f1a] transition font-semibold shadow-sm backdrop-blur"
-            >
-              <FaSignOutAlt className="hidden group-hover:inline-block" />
-              <span className="group-hover:hidden">Logout</span>
-            </button>
-            <button
-              onClick={() => navigate("/chat")}
-              className="group flex items-center gap-2 px-4 py-2 border border-white rounded bg-white/10 hover:bg-cyan-400 hover:text-[#0f0f1a] transition font-semibold shadow-sm backdrop-blur"
-            >
-              <FaCommentDots className="hidden group-hover:inline-block" />
-              <span className="group-hover:hidden">Chat</span>
-            </button>
-          </>
+    <>
+      <Navbar />
+      <div className="bg-white">
+        {/* Hero Section */}
+        {!isLoggedIn ? (
+          <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20 px-4">
+            <div className="max-w-7xl mx-auto text-center">
+              <h1 className="text-5xl md:text-6xl font-bold mb-6">Master Your Technical Skills</h1>
+              <p className="text-xl md:text-2xl mb-8 text-blue-100">
+                Comprehensive learning paths for DSA, DBMS, OS, and System Design
+              </p>
+              <div className="flex gap-4 justify-center flex-wrap">
+                <Link
+                  to="/register"
+                  className="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-blue-50 transition flex items-center gap-2"
+                >
+                  Get Started <FaArrowRight />
+                </Link>
+                <Link
+                  to="/login"
+                  className="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-white/10 transition"
+                >
+                  Sign In
+                </Link>
+              </div>
+            </div>
+          </section>
         ) : (
-          <>
-            <Link
-              to="/login"
-              className="group flex items-center gap-2 px-4 py-2 border border-white rounded bg-white/10 hover:bg-cyan-400 hover:text-[#0f0f1a] transition font-semibold shadow-sm backdrop-blur"
-            >
-              <FaSignInAlt className="hidden group-hover:inline-block" />
-              <span className="group-hover:hidden">Login</span>
-            </Link>
-            <Link
-              to="/register"
-              className="group flex items-center gap-2 px-4 py-2 border border-white rounded bg-white/10 hover:bg-cyan-400 hover:text-[#0f0f1a] transition font-semibold shadow-sm backdrop-blur"
-            >
-              <FaUserPlus className="hidden group-hover:inline-block" />
-              <span className="group-hover:hidden">Register</span>
-            </Link>
-          </>
+          <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 px-4">
+            <div className="max-w-7xl mx-auto text-center">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">Welcome Back!</h1>
+              <p className="text-lg md:text-xl text-blue-100">
+                Continue your learning journey with our comprehensive courses
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* Stats Section */}
+        <section className="bg-gray-50 py-12 px-4 border-b">
+          <div className="max-w-7xl mx-auto grid grid-cols-3 gap-8 text-center">
+            {stats.map((stat, idx) => (
+              <div key={idx}>
+                <div className="text-3xl font-bold text-blue-600">{stat.value}</div>
+                <div className="text-gray-600 font-medium">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Courses Section */}
+        <section className="py-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Explore Our Courses</h2>
+              <p className="text-xl text-gray-600">Choose a course and start learning today</p>
+            </div>
+
+            {isLoggedIn ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {courses.map((course) => (
+                  <Link
+                    key={course.id}
+                    to={course.link}
+                    className="group"
+                  >
+                    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:scale-105 h-full">
+                      <div className={`bg-gradient-to-br ${course.color} p-8 text-white flex items-center justify-center h-40`}>
+                        {course.icon}
+                      </div>
+                      <div className="p-6">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition">
+                          {course.title}
+                        </h3>
+                        <p className="text-gray-600 text-sm mb-4">{course.description}</p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-blue-600">{course.topics} Topics</span>
+                          <FaArrowRight className="text-blue-600 group-hover:translate-x-2 transition" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-blue-50 rounded-lg">
+                <p className="text-gray-700 mb-4">Sign in to access all courses</p>
+                <Link to="/login" className="text-blue-600 font-bold hover:underline">
+                  Login Now →
+                </Link>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        {!isLoggedIn && (
+          <section className="bg-blue-50 py-16 px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to start learning?</h2>
+              <p className="text-gray-600 mb-8 text-lg">
+                Join thousands of students mastering DSA and other technical concepts
+              </p>
+              <Link
+                to="/register"
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition inline-block"
+              >
+                Sign Up Free
+              </Link>
+            </div>
+          </section>
         )}
       </div>
-
-      {/* Card Slider */}
-      <div className="flex items-center justify-center w-full max-w-6xl px-4 relative mt-20 perspective-[1200px]">
-        <button
-          aria-label="Previous card"
-          onClick={handleLeftClick}
-          className="absolute left-0 text-white text-4xl px-4 hover:scale-125 transition z-20"
-        >
-          {"<"}
-        </button>
-
-        <div className="relative flex items-center justify-center w-full h-[400px]">
-          {cards.map((card, index) => (
-            <div
-              key={card.title}
-              className={getCardStyle(index)}
-              onClick={() => handleCardClick(card, index)}
-              role={index === currentIndex ? "button" : undefined}
-              tabIndex={index === currentIndex ? 0 : -1}
-              onKeyDown={(e) => {
-                if (
-                  (e.key === "Enter" || e.key === " ") &&
-                  index === currentIndex
-                ) {
-                  handleCardClick(card, index);
-                }
-              }}
-              style={{ fontFamily: "'Orbitron', sans-serif" }}
-            >
-              <div className="mb-4 text-cyan-300">{card.icon}</div>
-              <div className="text-2xl font-bold">{card.title}</div>
-              <p className="text-sm mt-2 text-white/60 px-4 text-center">
-                Access your {card.title.toLowerCase()} to track and grow.
-              </p>
-              <button className="mt-4 px-3 py-1 text-sm border border-cyan-300 rounded hover:bg-cyan-300 hover:text-black transition-all">
-                Go
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <button
-          aria-label="Next card"
-          onClick={handleRightClick}
-          className="absolute right-0 text-white text-4xl px-4 hover:scale-125 transition z-20"
-        >
-          {">"}
-        </button>
-      </div>
-
-      {/* Custom Modal Alert */}
-      <ModalAlert
-        show={showAlert}
-        message={alertMessage}
-        onClose={() => setShowAlert(false)}
-      />
-    </div>
+    </>
   );
 };
 

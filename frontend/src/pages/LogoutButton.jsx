@@ -1,12 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-
 const LogoutButton = ({ onLogout }) => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     onLogout(); // Trigger re-render in Home
   };
-
   return (
     <button
       onClick={handleLogout}

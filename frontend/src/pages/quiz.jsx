@@ -1,4 +1,3 @@
-// src/pages/Quiz.jsx
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -44,8 +43,11 @@ const Quiz = () => {
   const topic = queryParams.get("topic");
   const count = queryParams.get("count") || 5;
 
+  // Fetch quiz questions
   useEffect(() => {
-    const fetchURL = `${import.meta.env.VITE_BACKEND_URL}/quiz/${count}?topic=${encodeURIComponent(topic)}`;
+    const fetchURL = `${import.meta.env.VITE_BACKEND_URL}/quiz/${count}?topic=${encodeURIComponent(
+      topic
+    )}`;
 
     fetch(fetchURL)
       .then((res) => {
@@ -53,7 +55,8 @@ const Quiz = () => {
         return res.json();
       })
       .then((data) => {
-        setQuestions(data);
+        console.log("Fetched quiz data:", data); // ✅ Debugging log
+        setQuestions(Array.isArray(data.questions) ? data.questions : []);
         setLoading(false);
       })
       .catch((err) => {
@@ -63,7 +66,10 @@ const Quiz = () => {
       });
   }, [topic, count]);
 
+  // Handle answer selection
   const handleOptionClick = (selectedIndex) => {
+    if (!questions[current]) return;
+
     const updatedAnswers = [
       ...answers,
       {
@@ -76,6 +82,7 @@ const Quiz = () => {
     if (current + 1 < questions.length) {
       setCurrent(current + 1);
     } else {
+      // Submit answers
       fetch(`${import.meta.env.VITE_BACKEND_URL}/quiz/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -104,21 +111,48 @@ const Quiz = () => {
     }
   };
 
+  // Loading state
   if (loading) {
     return <div className="text-center mt-10 text-white">Loading quiz...</div>;
   }
 
+  // Error state
   if (error) {
     return <div className="text-center mt-10 text-red-500">{error}</div>;
   }
 
+  // No questions returned
+  if (!questions || questions.length === 0) {
+    return (
+      <div className="text-center mt-10 text-red-400">
+        No questions available for topic: <b>{topic}</b>
+        <div className="mt-4">
+          <button
+            onClick={() => navigate("/quiz/setup")}
+            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg"
+          >
+            ← Back to Setup
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Safe access to current question
   const currentQuestion = questions[current];
+  if (!currentQuestion) {
+    return (
+      <div className="text-center mt-10 text-red-400">
+        Something went wrong loading this question.
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white px-4 relative">
       {/* Go back to home button */}
       <button
-        onClick={() => navigate('/')}
+        onClick={() => navigate("/")}
         className="absolute top-4 left-4 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
       >
         ← Home

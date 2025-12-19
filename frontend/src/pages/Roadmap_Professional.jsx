@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { FaLock, FaCheckCircle } from 'react-icons/fa';
+import { FaLock, FaCheckCircle, FaClock } from 'react-icons/fa';
 
 const topicMap = {
   dsa: [
@@ -51,7 +51,7 @@ const getCompletedTopics = () => {
 
 const Roadmap = () => {
   const { section } = useParams();
-  const topics = useMemo(() => topicMap[section] || [], [section]);
+  const topics = topicMap[section] || [];
   const containerRef = useRef(null);
   const nodeRefs = useRef({});
   const [lines, setLines] = useState([]);
@@ -60,17 +60,17 @@ const Roadmap = () => {
     const levels = [];
     const visited = new Set();
     const queue = [{ name: topics[0]?.name, level: 0 }];
-
+    
     while (queue.length) {
       const { name, level } = queue.shift();
-
+      
       if (visited.has(name)) continue;
       visited.add(name);
-
+      
       if (!levels[level]) levels[level] = [];
-
+      
       const topic = topics.find((t) => t.name === name);
-
+      
       if (topic) {
         levels[level].push(topic);
         topic.children.forEach((childName) => {
@@ -86,19 +86,19 @@ const Roadmap = () => {
       const newLines = [];
       const padding = -5;
       const containerRect = containerRef.current?.getBoundingClientRect();
-
+      
       if (!containerRect) return;
 
       topics.forEach((topic) => {
         const fromEl = nodeRefs.current[topic.name];
         if (!fromEl) return;
-
+        
         const fromRect = fromEl.getBoundingClientRect();
-
+        
         topic.children.forEach((childName) => {
           const toEl = nodeRefs.current[childName];
           if (!toEl) return;
-
+          
           const toRect = toEl.getBoundingClientRect();
           newLines.push({
             x1: fromRect.left + fromRect.width / 2 - containerRect.left,

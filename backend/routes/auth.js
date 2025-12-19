@@ -12,6 +12,7 @@ const router = express.Router();
 
 // @route   POST /api/auth/register
 router.post('/register', async (req, res) => {
+  console.log('Register request body:', req.body);
   try {
     const { username, password, fullName, degree, branch, semesterCompleted, resume } = req.body;
 
@@ -61,6 +62,10 @@ router.post('/register', async (req, res) => {
 
   } catch (error) {
     console.error('Registration Error:', error);
+    // Handle Mongo duplicate key error (race condition)
+    if (error && error.code === 11000) {
+      return res.status(400).json({ message: 'Username already taken.' });
+    }
     res.status(500).json({ message: 'Server error during registration.' });
   }
 });

@@ -11,10 +11,17 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Allow requests from frontend origin
+// ✅ Allow requests from frontend origin(s)
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174', // Vite default when using a different port
+];
+
+// For local development reflect the request origin so dev ports (5173/5174) work.
+// In production, replace with a strict allowlist read from env.
 app.use(cors({
-  origin: "http://localhost:5173",  // Your frontend URL
-  credentials: true,                // Allow cookies if needed
+  origin: true,
+  credentials: true,
 }));
 
 // ✅ Middleware

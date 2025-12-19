@@ -182,12 +182,13 @@ Content:
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-12 px-4">
           <div className="max-w-6xl mx-auto">
-            <button
+            <Link
+              to="#"
               onClick={() => navigate(-1)}
               className="inline-flex items-center gap-2 text-blue-100 hover:text-white mb-6 transition"
             >
               <FaArrowLeft /> Back
-            </button>
+            </Link>
             <h1 className="text-4xl font-bold mb-2">{name}</h1>
             <p className="text-blue-100">Learn the fundamentals and test your knowledge</p>
           </div>

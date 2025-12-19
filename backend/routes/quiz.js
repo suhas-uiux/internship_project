@@ -1,56 +1,54 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Question = require('../models/Question');
+const Question = require("../models/Question");
 
-// @route GET /quiz/:count
-// @desc Get random questions (optionally filtered by topic)
-router.get('/:count', async (req, res) => {
-  const count = parseInt(req.params.count);
-  const topic = req.query.topic; // e.g., ?topic=Java
+// @route GET /quiz?count=5&topic=Java
+router.get("/", async (req, res) => {
+  const count = parseInt(req.query.count);
+  const topic = req.query.topic;
 
   if (!count || isNaN(count) || count <= 0) {
-    return res.status(400).json({ error: 'Invalid count parameter' });
+    return res.status(400).json({ error: "Invalid count parameter" });
   }
 
   try {
     const filter = topic
-      ? { topic: { $regex: new RegExp(`^${topic}$`, 'i') } }
+      ? { topic: { $regex: new RegExp(`^${topic}$`, "i") } }
       : {};
 
     const questions = await Question.aggregate([
       { $match: filter },
-      { $sample: { size: count } }
+      { $sample: { size: count } },
     ]);
 
-    const formatted = questions.map(q => ({
+    const formatted = questions.map((q) => ({
       _id: q._id,
       questionText: q.questionText,
-      options: q.options
+      options: q.options,
     }));
 
-    res.json(formatted);
+    res.json({ questions: formatted }); // ✅ consistent format
   } catch (err) {
-    console.error('Error fetching questions:', err);
-    res.status(500).json({ error: 'Failed to get questions' });
+    console.error("Error fetching questions:", err);
+    res.status(500).json({ error: "Failed to get questions" });
   }
 });
 
 // @route POST /quiz/submit
-// @desc Submit answers and calculate score
-router.post('/submit', async (req, res) => {
-  const { answers } = req.body; // format: [{ questionId, selectedIndex }]
+router.post("/submit", async (req, res) => {
+  const { answers } = req.body;
 
   if (!Array.isArray(answers) || answers.length === 0) {
-    return res.status(400).json({ error: 'Invalid or empty answers array' });
+    return res.status(400).json({ error: "Invalid or empty answers array" });
   }
 
   try {
-    const ids = answers.map(a => a.questionId);
+    const ids = answers.map((a) => a.questionId);
     const questions = await Question.find({ _id: { $in: ids } });
 
     let score = 0;
-    answers.forEach(ans => {
-      const q = questions.find(q => q._id.toString() === ans.questionId);
+    answers.forEach((ans) => {
+      const q = questions.find((q) => q._id.toString() === ans.questionId);
       if (q && q.correctAnswerIndex === ans.selectedIndex) {
         score++;
       }
@@ -58,8 +56,8 @@ router.post('/submit', async (req, res) => {
 
     res.json({ score, total: answers.length });
   } catch (err) {
-    console.error('Error evaluating answers:', err);
-    res.status(500).json({ error: 'Failed to evaluate answers' });
+    console.error("Error evaluating answers:", err);
+    res.status(500).json({ error: "Failed to evaluate answers" });
   }
 });
 
