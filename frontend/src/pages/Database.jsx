@@ -116,7 +116,7 @@ const Database = () => {
     if (next) {
       setModal({ next });
     } else {
-      alert("🎉 You've completed all available Databasetopics!");
+      alert("You've completed all available Databasetopics!");
     }
   }, [location.state]);
 
