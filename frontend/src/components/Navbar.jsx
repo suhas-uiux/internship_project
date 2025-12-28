@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaUser, FaSignOutAlt, FaCommentDots } from 'react-icons/fa';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { FaUser, FaSignOutAlt, FaCommentDots } from "react-icons/fa";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isLoggedIn = !!localStorage.getItem('token');
-  const username = localStorage.getItem('username');
+  const isLoggedIn = !!localStorage.getItem("token");
+  const username = localStorage.getItem("username");
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    window.location.href = '/';
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    window.location.href = "/";
     setMobileMenuOpen(false);
   };
 
@@ -23,24 +23,50 @@ const Navbar = () => {
             <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
               C
             </div>
-            <span className="text-xl font-bold text-gray-900 hidden sm:inline">CrackIT</span>
+            <span className="text-xl font-bold text-gray-900 hidden sm:inline">
+              CrackIT
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
+            <Link
+              to="/quiz/setup"
+              className="text-gray-700 hover:text-blue-600 font-medium transition"
+            >
+              Quizzes
+            </Link>
+            <Link
+              to="/quiz"
+              className="text-gray-700 hover:text-blue-600 font-medium transition"
+            >
+              Take Quiz
+            </Link>
             {isLoggedIn && (
               <>
-                <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium transition">
+                <Link
+                  to="/"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition"
+                >
                   Home
                 </Link>
-                <Link to="/content" className="text-gray-700 hover:text-blue-600 font-medium transition">
+                <Link
+                  to="/content"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition"
+                >
                   Courses
                 </Link>
-                <Link to="/chat" className="text-gray-700 hover:text-blue-600 font-medium transition flex items-center gap-1">
+                <Link
+                  to="/chat"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition flex items-center gap-1"
+                >
                   <FaCommentDots className="text-blue-600" />
                   Chat
                 </Link>
-                <Link to="/profile" className="text-gray-700 hover:text-blue-600 font-medium transition flex items-center gap-1">
+                <Link
+                  to="/profile"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition flex items-center gap-1"
+                >
                   <FaUser className="text-blue-600" />
                   Profile
                 </Link>
@@ -53,7 +79,9 @@ const Navbar = () => {
             {isLoggedIn ? (
               <>
                 <div className="hidden md:flex items-center gap-3">
-                  <span className="text-sm font-medium text-gray-700">{username}</span>
+                  <span className="text-sm font-medium text-gray-700">
+                    {username}
+                  </span>
                   <button
                     onClick={handleLogout}
                     className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-medium"
@@ -85,7 +113,7 @@ const Navbar = () => {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden text-gray-700 text-2xl"
             >
-              {mobileMenuOpen ? '✕' : '☰'}
+              {mobileMenuOpen ? "✕" : "☰"}
             </button>
           </div>
         </div>
@@ -96,6 +124,20 @@ const Navbar = () => {
             <div className="px-4 py-4 space-y-3">
               {isLoggedIn ? (
                 <>
+                  <Link
+                    to="/quiz/setup"
+                    className="block px-4 py-2 text-gray-700 hover:bg-blue-50 rounded-lg"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Quizzes
+                  </Link>
+                  <Link
+                    to="/quiz"
+                    className="block px-4 py-2 text-gray-700 hover:bg-blue-50 rounded-lg"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Take Quiz
+                  </Link>
                   <Link
                     to="/"
                     className="block px-4 py-2 text-gray-700 hover:bg-blue-50 rounded-lg"
@@ -133,6 +175,20 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
+                  <Link
+                    to="/quiz/setup"
+                    className="block px-4 py-2 text-gray-700 hover:bg-blue-50 rounded-lg"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Quizzes
+                  </Link>
+                  <Link
+                    to="/quiz"
+                    className="block px-4 py-2 text-gray-700 hover:bg-blue-50 rounded-lg"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Take Quiz
+                  </Link>
                   <Link
                     to="/login"
                     className="block px-4 py-2 text-blue-600 border border-blue-600 rounded-lg text-center"

@@ -17,7 +17,7 @@ const saveQuizProgress = (topic, score) => {
     "Tries",
     "Heap/PQ",
     "Backtracking",
-    "Graphs"
+    "Graphs",
   ];
 
   const isRoadmap = roadmapTopics.includes(topic);
@@ -45,13 +45,19 @@ const Quiz = () => {
 
   // Fetch quiz questions
   useEffect(() => {
-    const fetchURL = `${import.meta.env.VITE_BACKEND_URL}/quiz/${count}?topic=${encodeURIComponent(
-      topic
+    // backend expects count and topic as query params: /quiz?count=5&topic=Java
+    const fetchURL = `${
+      import.meta.env.VITE_BACKEND_URL
+    }/quiz?count=${encodeURIComponent(count)}&topic=${encodeURIComponent(
+      topic || ""
     )}`;
 
-    fetch(fetchURL)
+    fetch(fetchURL, { credentials: "include" })
       .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch questions");
+        if (!res.ok)
+          throw new Error(
+            `Failed to fetch questions: ${res.status} ${res.statusText}`
+          );
         return res.json();
       })
       .then((data) => {
@@ -61,7 +67,7 @@ const Quiz = () => {
       })
       .catch((err) => {
         setError("Error loading quiz questions. Please try again.");
-        console.error("Error loading questions:", err);
+        console.error("Error loading questions:", err, { fetchURL });
         setLoading(false);
       });
   }, [topic, count]);
